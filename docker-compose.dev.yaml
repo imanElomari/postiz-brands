@@ -1,0 +1,113 @@
+version: "3.9"
+
+services:
+  # --- PostgreSQL Database ---
+  postiz-postgres:
+    image: postgres:17-alpine
+    container_name: postiz-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postiz_user
+      POSTGRES_PASSWORD: Postiz123!
+      POSTGRES_DB: postiz_db
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    networks:
+      - postiz-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postiz_user -d postiz_db"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # --- Redis ---
+  postiz-redis:
+    image: redis:7.2
+    container_name: postiz-redis
+    restart: always
+    volumes:
+      - postiz-redis-data:/data
+    networks:
+      - postiz-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
+  # --- Atlasimex ---
+  postiz-atlasimex:
+    build: ./postiz-app
+    container_name: postiz-atlasimex
+    restart: always
+    env_file:
+      - .env.atlasimex
+    volumes:
+      - postiz-uploads-atlasimex:/opt/postiz/uploads/atlasimex
+    networks:
+      - postiz-network
+    depends_on:
+      - postiz-postgres
+      - postiz-redis
+
+  # --- Promax ---
+  postiz-promax:
+    build: ./postiz-app
+    container_name: postiz-promax
+    restart: always
+    env_file:
+      - .env.promax
+    volumes:
+      - postiz-uploads-promax:/opt/postiz/uploads/promax
+    networks:
+      - postiz-network
+    depends_on:
+      - postiz-postgres
+      - postiz-redis
+
+  # --- X6Drinks ---
+  postiz-x6drinks:
+    build: ./postiz-app
+    container_name: postiz-x6drinks
+    restart: always
+    env_file:
+      - .env.x6drinks
+    volumes:
+      - postiz-uploads-x6drinks:/opt/postiz/uploads/x6drinks
+    networks:
+      - postiz-network
+    depends_on:
+      - postiz-postgres
+      - postiz-redis
+
+  # --- Caddy Reverse Proxy ---
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - postiz-network
+    depends_on:
+      - postiz-atlasimex
+      - postiz-promax
+      - postiz-x6drinks
+
+volumes:
+  postgres-volume:
+  postiz-redis-data:
+  postiz-uploads-atlasimex:
+  postiz-uploads-promax:
+  postiz-uploads-x6drinks:
+  caddy-data:
+  caddy-config:
+
+networks:
+  postiz-network:
+    driver: bridge
