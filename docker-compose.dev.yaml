@@ -39,7 +39,10 @@ services:
   postiz-atlasimex:
     build:
       context: .
-      dockerfile: Dockerfile.dev   # use your custom Dockerfile
+      dockerfile: Dockerfile.dev
+      args:
+        BRAND_TITLE: ${BRAND_TITLE}
+        BRAND_LOGO: ${BRAND_LOGO}
     container_name: postiz-atlasimex
     restart: always
     env_file:
@@ -57,6 +60,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+      args:
+        BRAND_TITLE: ${BRAND_TITLE}
+        BRAND_LOGO: ${BRAND_LOGO}
     container_name: postiz-promax
     restart: always
     env_file:
@@ -74,6 +80,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+      args:
+        BRAND_TITLE: ${BRAND_TITLE}
+        BRAND_LOGO: ${BRAND_LOGO}
     container_name: postiz-x6drinks
     restart: always
     env_file:
@@ -86,7 +95,7 @@ services:
       - postiz-postgres
       - postiz-redis
 
-  # --- Caddy Reverse Proxy ---
+    # --- Caddy Reverse Proxy ---
   caddy:
     image: caddy:2
     container_name: caddy
