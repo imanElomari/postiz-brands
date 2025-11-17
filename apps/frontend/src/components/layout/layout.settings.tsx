@@ -49,6 +49,11 @@ extend(utc);
 extend(weekOfYear);
 extend(isoWeek);
 extend(isBetween);
+import { isGeneralServerSide } from '@gitroom/helpers/utils/is.general.server.side';
+
+// Env-based branding
+const BRAND_LOGO = process.env.BRAND_LOGO || '';
+
 export const LayoutSettings = ({ children }: { children: ReactNode }) => {
   const fetch = useFetch();
   const t = useT();
@@ -67,6 +72,15 @@ export const LayoutSettings = ({ children }: { children: ReactNode }) => {
     refreshWhenHidden: false,
   });
   if (!user) return null;
+
+  // Determine the final logo (priority order)
+    const logoSrc =
+      BRAND_LOGO.trim() !== ''
+        ? BRAND_LOGO
+        : isGeneralServerSide()
+        ? '/postiz.svg'
+        : '/logo.svg';
+
   return (
     <ContextWrapper user={user}>
       <CopilotKit
@@ -96,11 +110,12 @@ export const LayoutSettings = ({ children }: { children: ReactNode }) => {
               >
                 <div className="min-w-[55px]">
                   <Image
-                    src={isGeneral ? '/postiz.svg' : '/logo.svg'}
-                    width={55}
-                    height={53}
-                    alt="Logo"
+                      src={logoSrc}
+                      width={55}
+                      height={53}
+                      alt="Brand Logo"
                   />
+
                 </div>
                 <div
                   className={clsx(!isGeneral ? 'mt-[12px]' : 'min-w-[80px]')}
