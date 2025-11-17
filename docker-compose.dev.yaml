@@ -47,8 +47,6 @@ services:
     restart: always
     env_file:
       - .env.atlasimex
-    volumes:
-      - postiz-uploads-atlasimex:/opt/postiz/uploads/atlasimex
     networks:
       - postiz-network
     depends_on:
@@ -67,8 +65,6 @@ services:
     restart: always
     env_file:
       - .env.promax
-    volumes:
-      - postiz-uploads-promax:/opt/postiz/uploads/promax
     networks:
       - postiz-network
     depends_on:
@@ -87,15 +83,13 @@ services:
     restart: always
     env_file:
       - .env.x6drinks
-    volumes:
-      - postiz-uploads-x6drinks:/opt/postiz/uploads/x6drinks
     networks:
       - postiz-network
     depends_on:
       - postiz-postgres
       - postiz-redis
 
-    # --- Caddy Reverse Proxy ---
+  # --- Caddy Reverse Proxy ---
   caddy:
     image: caddy:2
     container_name: caddy
@@ -118,9 +112,6 @@ services:
 volumes:
   postgres-volume:
   postiz-redis-data:
-  postiz-uploads-atlasimex:
-  postiz-uploads-promax:
-  postiz-uploads-x6drinks:
   caddy-data:
   caddy-config:
 
