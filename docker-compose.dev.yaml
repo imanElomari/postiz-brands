@@ -41,8 +41,8 @@ services:
       context: .
       dockerfile: Dockerfile.dev
       args:
-        BRAND_TITLE: ${BRAND_TITLE}
-        BRAND_LOGO: ${BRAND_LOGO}
+        BRAND_TITLE: "${BRAND_TITLE:-Atlasimex Media}"
+        BRAND_LOGO: "${BRAND_LOGO:-branding/atlasimex.png}"
     container_name: postiz-atlasimex
     restart: always
     env_file:
@@ -59,8 +59,8 @@ services:
       context: .
       dockerfile: Dockerfile.dev
       args:
-        BRAND_TITLE: ${BRAND_TITLE}
-        BRAND_LOGO: ${BRAND_LOGO}
+        BRAND_TITLE: "${BRAND_TITLE:-Promax Media}"
+        BRAND_LOGO: "${BRAND_LOGO:-branding/promax.png}"
     container_name: postiz-promax
     restart: always
     env_file:
@@ -77,8 +77,8 @@ services:
       context: .
       dockerfile: Dockerfile.dev
       args:
-        BRAND_TITLE: ${BRAND_TITLE}
-        BRAND_LOGO: ${BRAND_LOGO}
+        BRAND_TITLE: "${BRAND_TITLE:-X6Drinks Media}"
+        BRAND_LOGO: "${BRAND_LOGO:-branding/x6drinks.png}"
     container_name: postiz-x6drinks
     restart: always
     env_file:
