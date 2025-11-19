@@ -41,6 +41,10 @@ const normalizeLogo = (src: string) => {
   return src.startsWith('/') ? src : '/' + src;
 };
 const logoSrc = normalizeLogo(BRAND_LOGO);
+const brandTitle =
+  process.env.NEXT_PUBLIC_BRAND_TITLE ||
+  process.env.BRAND_TITLE ||
+  (process.env.IS_GENERAL ? 'Postiz' : 'Gitroom');
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const allHeaders = headers();
@@ -50,6 +54,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   return (
     <html>
       <head>
+        <title>{brandTitle}</title>
         <link rel="icon" href={logoSrc} sizes="any" />
       </head>
       <body
