@@ -8,8 +8,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // Connection URL moved to PrismaClient adapter per Prisma v7 requirements.
-  // See libraries/nestjs-libraries/src/database/prisma/prisma.service.ts
+  url      = env("DATABASE_URL")
 }
 
 model Organization {
