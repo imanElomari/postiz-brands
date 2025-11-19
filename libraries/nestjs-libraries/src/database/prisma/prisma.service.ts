@@ -4,20 +4,14 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    // Prisma v7 requires moving the connection URL out of schema.prisma.
-    // Provide the DATABASE_URL at runtime via the client adapter.
-    const clientOptions: any = {
+    super({
       log: [
         {
           emit: 'event',
           level: 'query',
         },
       ],
-      adapter: {
-        url: process.env.DATABASE_URL,
-      },
-    };
-    super(clientOptions);
+    });
   }
   async onModuleInit() {
     await this.$connect();
