@@ -9,8 +9,15 @@ import loadDynamic from 'next/dynamic';
 import { isGeneralServerSide } from '@gitroom/helpers/utils/is.general.server.side';
 
 // Env-based branding
-const BRAND_LOGO = process.env.BRAND_LOGO || '';
-const BRAND_TITLE = process.env.BRAND_TITLE || 'Gitroom';
+const BRAND_LOGO = process.env.NEXT_PUBLIC_BRAND_LOGO || process.env.BRAND_LOGO || '';
+const BRAND_TITLE =
+  process.env.NEXT_PUBLIC_BRAND_TITLE || process.env.BRAND_TITLE || 'Gitroom';
+
+const normalizeLogo = (src: string) => {
+  if (!src) return '';
+  if (/^https?:\/\//i.test(src)) return src;
+  return src.startsWith('/') ? src : '/' + src;
+};
 
 const ReturnUrlComponent = loadDynamic(() => import('./return.url.component'));
 
@@ -22,9 +29,10 @@ export default async function AuthLayout({
   const t = await getT();
 
   // Determine the final logo (priority order)
+  const logoEnv = BRAND_LOGO.trim();
   const logoSrc =
-    BRAND_LOGO.trim() !== ''
-      ? BRAND_LOGO
+    logoEnv !== ''
+      ? normalizeLogo(logoEnv)
       : isGeneralServerSide()
       ? '/postiz.svg'
       : '/logo.svg';

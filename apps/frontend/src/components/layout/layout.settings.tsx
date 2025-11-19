@@ -52,7 +52,16 @@ extend(isBetween);
 import { isGeneralServerSide } from '@gitroom/helpers/utils/is.general.server.side';
 
 // Env-based branding
-const BRAND_LOGO = process.env.BRAND_LOGO || '';
+const BRAND_LOGO =
+  process.env.NEXT_PUBLIC_BRAND_LOGO || process.env.BRAND_LOGO || '';
+const BRAND_TITLE =
+  process.env.NEXT_PUBLIC_BRAND_TITLE || process.env.BRAND_TITLE || 'Gitroom';
+
+const normalizeLogo = (src: string) => {
+  if (!src) return '';
+  if (/^https?:\/\//i.test(src)) return src;
+  return src.startsWith('/') ? src : '/' + src;
+};
 
 export const LayoutSettings = ({ children }: { children: ReactNode }) => {
   const fetch = useFetch();
@@ -74,12 +83,13 @@ export const LayoutSettings = ({ children }: { children: ReactNode }) => {
   if (!user) return null;
 
   // Determine the final logo (priority order)
-    const logoSrc =
-      BRAND_LOGO.trim() !== ''
-        ? BRAND_LOGO
-        : isGeneralServerSide()
-        ? '/postiz.svg'
-        : '/logo.svg';
+  const logoEnv = BRAND_LOGO.trim();
+  const logoSrc =
+    logoEnv !== ''
+      ? normalizeLogo(logoEnv)
+      : isGeneralServerSide()
+      ? '/postiz.svg'
+      : '/logo.svg';
 
   return (
     <ContextWrapper user={user}>
@@ -110,10 +120,10 @@ export const LayoutSettings = ({ children }: { children: ReactNode }) => {
               >
                 <div className="min-w-[55px]">
                   <Image
-                      src={logoSrc}
-                      width={55}
-                      height={53}
-                      alt="Brand Logo"
+                    src={logoSrc}
+                    width={55}
+                    height={53}
+                    alt="Brand Logo"
                   />
 
                 </div>
@@ -146,8 +156,8 @@ export const LayoutSettings = ({ children }: { children: ReactNode }) => {
                       />
                     </svg>
                   ) : (
-                    'Gitroom'
-                  )}
+                    {BRAND_TITLE}
+                   )}
                 </div>
               </Link>
               {user?.orgId &&
