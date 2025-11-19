@@ -125,7 +125,6 @@ export const LayoutSettings = ({ children }: { children: ReactNode }) => {
                     height={53}
                     alt="Brand Logo"
                   />
-
                 </div>
                 <div
                   className={clsx(!isGeneral ? 'mt-[12px]' : 'min-w-[80px]')}
@@ -156,8 +155,8 @@ export const LayoutSettings = ({ children }: { children: ReactNode }) => {
                       />
                     </svg>
                   ) : (
-                    {BRAND_TITLE}
-                   )}
+                    { BRAND_TITLE }
+                  )}
                 </div>
               </Link>
               {user?.orgId &&

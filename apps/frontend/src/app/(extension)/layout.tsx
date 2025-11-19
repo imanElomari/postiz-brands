@@ -9,6 +9,16 @@ import clsx from 'clsx';
 import { VariableContextComponent } from '@gitroom/react/helpers/variable.context';
 import UtmSaver from '@gitroom/helpers/utils/utm.saver';
 
+// Env-based branding (public-first)
+const BRAND_LOGO =
+  process.env.NEXT_PUBLIC_BRAND_LOGO || process.env.BRAND_LOGO || '';
+const normalizeLogo = (src: string) => {
+  if (!src) return '/favicon.ico';
+  if (/^https?:\/\//i.test(src)) return src;
+  return src.startsWith('/') ? src : '/' + src;
+};
+const logoSrc = normalizeLogo(BRAND_LOGO);
+
 const jakartaSans = Plus_Jakarta_Sans({
   weight: ['600', '500'],
   style: ['normal', 'italic'],
@@ -19,9 +29,11 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   return (
     <html>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href={logoSrc} sizes="any" />
       </head>
-      <body className={clsx(jakartaSans.className, 'dark text-primary !bg-primary')}>
+      <body
+        className={clsx(jakartaSans.className, 'dark text-primary !bg-primary')}
+      >
         <VariableContextComponent
           language="en"
           storageProvider={
